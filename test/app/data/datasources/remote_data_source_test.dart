@@ -12,7 +12,7 @@ import 'package:mockito/mockito.dart';
 class MockRestClient extends Mock implements RestClient {}
 
 void main() {
-  RemoteDataSourceImpl dataSource;
+  late RemoteDataSourceImpl dataSource;
   RestClient mockRestClient;
 
   final Dio tDio = Dio();

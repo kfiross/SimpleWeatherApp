@@ -17,7 +17,7 @@ class TemperatureModelAdapter extends TypeAdapter<TemperatureModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TemperatureModel(
-      fields[0] as double,
+      fields[0] as double?,
     );
   }
 

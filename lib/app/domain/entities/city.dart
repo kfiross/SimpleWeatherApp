@@ -9,10 +9,10 @@ class City extends Equatable{
   final name;
 
   @HiveField(1)
-  final String key;
+  final String? key;
 
   City({this.name, this.key});
 
   @override
-  List<Object> get props => [this.name, this.key];
+  List<Object?> get props => [this.name, this.key];
 }

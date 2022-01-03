@@ -9,10 +9,10 @@ class ForecastState extends Union4Impl<Initial, Loading, Success, Failure>{
 
   factory ForecastState.loading() => ForecastState._(unions.second(Loading()));
 
-  factory ForecastState.success(Weather current, Forecast forecast) =>
+  factory ForecastState.success(Weather? current, Forecast? forecast) =>
       ForecastState._(unions.third(Success(current, forecast)));
 
-  factory ForecastState.failure(String message) =>
+  factory ForecastState.failure(String? message) =>
       ForecastState._(unions.fourth(Failure(message)));
 }
 
@@ -31,20 +31,20 @@ class Loading extends _ForecastState {
 }
 
 class Success extends _ForecastState {
-  final Forecast forecast;
-  final Weather current;
+  final Forecast? forecast;
+  final Weather? current;
 
   Success(this.current, this.forecast);
 
   @override
-  List<Object> get props => [forecast];
+  List<Object?> get props => [forecast];
 }
 
 class Failure extends _ForecastState {
-  final String message;
+  final String? message;
 
   Failure(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

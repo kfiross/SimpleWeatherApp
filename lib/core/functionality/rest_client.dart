@@ -9,7 +9,7 @@ part 'rest_client.g.dart';
 
 @RestApi(baseUrl: Constants.ENDPOINT_ACCUWEATHER)
 abstract class RestClient {
-  factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
+  factory RestClient(Dio dio, {String? baseUrl}) = _RestClient;
 
   @GET("/locations/v1/cities/autocomplete")
   Future<HttpResponse<List<CityModel>>> getCities(

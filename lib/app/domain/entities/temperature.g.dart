@@ -17,7 +17,7 @@ class TemperatureAdapter extends TypeAdapter<Temperature> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Temperature(
-      fields[0] as double,
+      fields[0] as double?,
     );
   }
 

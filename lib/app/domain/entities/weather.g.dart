@@ -17,11 +17,11 @@ class WeatherAdapter extends TypeAdapter<Weather> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Weather(
-      cityKey: fields[0] as String,
-      conditions: fields[2] as String,
-      iconNumber: fields[3] as int,
-      temperature: fields[4] as Temperature,
-      epochTime: fields[1] as int,
+      cityKey: fields[0] as String?,
+      conditions: fields[2] as String?,
+      iconNumber: fields[3] as int?,
+      temperature: fields[4] as Temperature?,
+      epochTime: fields[1] as int?,
     );
   }
 

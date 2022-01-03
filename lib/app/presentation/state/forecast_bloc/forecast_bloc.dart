@@ -45,7 +45,7 @@ class ForecastBloc extends Bloc<ForecastEvent, ForecastState> {
     }
     else if (event is FetchForecastByGeolocationEvent){
 
-      Either<BaseFailure, City> failOrCity = await _repository.getCityByGeoLocation(
+      Either<BaseFailure, City?> failOrCity = await _repository.getCityByGeoLocation(
         event.latitude,
         event.longitude,
       );
@@ -56,10 +56,10 @@ class ForecastBloc extends Bloc<ForecastEvent, ForecastState> {
         return;
       }
 
-      City city = failOrCity.getOrElse(null);
+      City? city = failOrCity.getOrElse(() => throw "Exception");
 
       Either<BaseFailure, Map> failOrForecast = await _repository.getForecastAndCurrent(
-        city.key,
+        city?.key,
         forecastType: event.type,
         byKey: true,
       );

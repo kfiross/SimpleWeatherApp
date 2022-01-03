@@ -16,6 +16,7 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
 
   CitiesBloc(this._repository) : super(CitiesState.initial());
 
+
   @override
   Stream<CitiesState> mapEventToState(
     CitiesEvent event,

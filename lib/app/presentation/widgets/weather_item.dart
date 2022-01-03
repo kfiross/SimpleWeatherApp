@@ -14,10 +14,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class WeatherItem extends StatefulWidget{
-  final CityModel city;
-  final bool useCelsius;
+  final CityModel? city;
+  final bool? useCelsius;
 
-  WeatherItem({Key key, this.city, this.useCelsius}) : super(key: key);
+  WeatherItem({Key? key, this.city, this.useCelsius}) : super(key: key);
 
   @override
   _WeatherItemState createState() => _WeatherItemState();
@@ -29,7 +29,7 @@ class _WeatherItemState extends State<WeatherItem> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _weatherBloc.add(FetchWeatherEvent(widget.city.key, byKey: true));
+    _weatherBloc.add(FetchWeatherEvent(widget.city!.key, byKey: true));
     Provider.of<Updater>(context);
   }
 
@@ -40,14 +40,14 @@ class _WeatherItemState extends State<WeatherItem> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: BlocListener(
-        cubit: _weatherBloc,
+        bloc: _weatherBloc,
         listener: (context, WeatherState state) {
           state.join(
                 (_) => null,
                 (_) => null,
                 (success) {
 
-                  if(success.isCached){
+                  if(success.isCached!){
                     Fluttertoast.showToast(
                         msg: "No internet, using last data",
                         toastLength: Toast.LENGTH_SHORT,
@@ -71,13 +71,13 @@ class _WeatherItemState extends State<WeatherItem> {
           );
         },
         child: BlocBuilder(
-          cubit: _weatherBloc,
+          bloc: _weatherBloc,
           // ignore: missing_return
           builder: (context, WeatherState state) {
             return state.join(
                   (initial) => _buildErrorItem(),
                   (loading) => _buildLoadingItem(),
-                  (success) => _buildItem(success.weather),
+                  (success) => _buildItem(success.weather!),
                   (failure) => _buildErrorItem(),
             );
           },
@@ -99,17 +99,17 @@ class _WeatherItemState extends State<WeatherItem> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(height: 20,
-                child: Text(widget.city.name,
+                child: Text(widget.city!.name,
                   style: TextStyle(
                       fontWeight: FontWeight.bold),)),
             const SizedBox(height: 5),
             Expanded(
               child: Image.network(StringUtils.getWeatherIconUrl(
-                  weatherModel.iconNumber)),
+                  weatherModel.iconNumber!)),
             ),
             Text(
               (weatherModel.temperature as TemperatureModel)
-                  .toStringWithUnit(widget.useCelsius
+                  .toStringWithUnit(widget.useCelsius!
                   ? TemperatureUnit.celsius
                   : TemperatureUnit.fahrenheit),
               style: TextStyle(fontSize: 17),
@@ -128,14 +128,14 @@ class _WeatherItemState extends State<WeatherItem> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(height: 20,
-              child: Text(widget.city.name,
+              child: Text(widget.city!.name,
                 style: TextStyle(
                     fontWeight: FontWeight.bold),)),
           const SizedBox(height: 5),
           Expanded(
             child: Icon(Icons.wb_sunny_outlined, size: 42,),
           ),
-          Text("-- ${widget.useCelsius ? '℃': '℉'}",
+          Text("-- ${widget.useCelsius! ? '℃': '℉'}",
             style: TextStyle(fontSize: 17),
           ),
         ],
@@ -151,7 +151,7 @@ class _WeatherItemState extends State<WeatherItem> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(height: 20,
-              child: Text(widget.city.name,
+              child: Text(widget.city!.name,
                 style: TextStyle(
                     fontWeight: FontWeight.bold),)),
           const SizedBox(height: 5),

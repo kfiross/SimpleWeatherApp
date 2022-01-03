@@ -8,31 +8,26 @@ part of 'rest_client.dart';
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
-    ArgumentError.checkNotNull(_dio, '_dio');
     baseUrl ??= 'http://dataservice.accuweather.com';
   }
 
   final Dio _dio;
 
-  String baseUrl;
+  String? baseUrl;
 
   @override
   Future<HttpResponse<List<CityModel>>> getCities(apiKey, query) async {
-    ArgumentError.checkNotNull(apiKey, 'apiKey');
-    ArgumentError.checkNotNull(query, 'query');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'apikey': apiKey, r'q': query};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<List<dynamic>>(
-        '/locations/v1/cities/autocomplete',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    var value = _result.data
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<CityModel>>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/locations/v1/cities/autocomplete',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
         .map((dynamic i) => CityModel.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
@@ -41,21 +36,18 @@ class _RestClient implements RestClient {
 
   @override
   Future<HttpResponse<CityModel>> getCityByGeolocation(apiKey, query) async {
-    ArgumentError.checkNotNull(apiKey, 'apiKey');
-    ArgumentError.checkNotNull(query, 'query');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'apikey': apiKey, r'q': query};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>(
-        '/locations/v1/cities/geoposition/search',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    final value = CityModel.fromJson(_result.data);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<CityModel>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(
+                    _dio.options, '/locations/v1/cities/geoposition/search',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = CityModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
@@ -63,21 +55,17 @@ class _RestClient implements RestClient {
   @override
   Future<HttpResponse<List<WeatherModel>>> getCurrentConditions(
       key, apiKey) async {
-    ArgumentError.checkNotNull(key, 'key');
-    ArgumentError.checkNotNull(apiKey, 'apiKey');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'apikey': apiKey};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<List<dynamic>>(
-        '/currentconditions/v1/$key',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    var value = _result.data
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<WeatherModel>>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/currentconditions/v1/${key}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
         .map((dynamic i) => WeatherModel.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
@@ -87,26 +75,34 @@ class _RestClient implements RestClient {
   @override
   Future<HttpResponse<ForecastModel>> getForecast5Day(
       key, apiKey, metric) async {
-    ArgumentError.checkNotNull(key, 'key');
-    ArgumentError.checkNotNull(apiKey, 'apiKey');
-    ArgumentError.checkNotNull(metric, 'metric');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'apikey': apiKey,
       r'metric': metric
     };
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>(
-        '/forecasts/v1/daily/5day/$key',
-        queryParameters: queryParameters,
-        options: RequestOptions(
-            method: 'GET',
-            headers: <String, dynamic>{},
-            extra: _extra,
-            baseUrl: baseUrl),
-        data: _data);
-    final value = ForecastModel.fromJson(_result.data);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ForecastModel>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/forecasts/v1/daily/5day/${key}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ForecastModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
+  }
+
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
+      if (T == String) {
+        requestOptions.responseType = ResponseType.plain;
+      } else {
+        requestOptions.responseType = ResponseType.json;
+      }
+    }
+    return requestOptions;
   }
 }

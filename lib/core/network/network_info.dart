@@ -5,11 +5,11 @@ abstract class NetworkInfo{
 }
 
 class NetworkInfoImpl implements NetworkInfo {
-  final Connectivity connectionChecker;
+  final Connectivity? connectionChecker;
   NetworkInfoImpl(this.connectionChecker);
 
   @override
   Future<bool> get isConnected async {
-    return (await connectionChecker.checkConnectivity()) != ConnectivityResult.none;
+    return (await connectionChecker!.checkConnectivity()) != ConnectivityResult.none;
   }
 }

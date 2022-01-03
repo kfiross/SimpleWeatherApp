@@ -17,8 +17,8 @@ class CityModelAdapter extends TypeAdapter<CityModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CityModel(
-      name: fields[0] as String,
-      key: fields[1] as String,
+      name: fields[0] as String?,
+      key: fields[1] as String?,
     );
   }
 

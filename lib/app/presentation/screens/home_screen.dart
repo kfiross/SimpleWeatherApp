@@ -23,9 +23,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class HomeScreen extends StatefulWidget {
-  final CityModel city;
+  final CityModel? city;
 
-  const HomeScreen({Key key, this.city}) : super(key: key);
+  const HomeScreen({Key? key, this.city}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,12 +43,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   var favouritesBox = Hive.box('favorite_locations');
 
   // Controllers
-  RefreshController _refreshController;
-  AnimationController _lottieController;
+  late RefreshController _refreshController;
+  late AnimationController _lottieController;
   
   // state members
-  bool _useCelsius = false;
-  CityModel _currentCity;
+  bool? _useCelsius = false;
+  CityModel? _currentCity;
 
 
   @override
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _useCelsius = prefsBox.get('use_celsius', defaultValue: true);
 
     if (widget.city != null) {
-      _forecastBloc.add(FetchForecastEvent(widget.city.key, byKey: true));
+      _forecastBloc.add(FetchForecastEvent(widget.city!.key, byKey: true));
     }
     else{
       _showCurrentLocationForecast();
@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 prefsBox.put('use_celsius', _useCelsius);
               });
             },
-            isSelected: [_useCelsius, !_useCelsius],
+            isSelected: [_useCelsius!, !_useCelsius!],
             children: [
               Text("℃", style: TextStyle(fontSize: 20)),
               Text("℉", style: TextStyle(fontSize: 20)),
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _citiesBody(BuildContext context) {
     return BlocListener(
-        cubit: _citiesBloc,
+        bloc: _citiesBloc,
         listener: (context, CitiesState state) {
           state.join(
                 (_) => null,
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 (failure) {
               final dialog = AlertDialog(
                 title: Text("Error"),
-                content: Text(failure.message),
+                content: Text(failure.message!),
                 actions: [
                   FlatButton(
                     onPressed: () => Navigator.pop(context),
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _forecastBody(BuildContext context) {
     return BlocListener(
-      cubit: _forecastBloc,
+      bloc: _forecastBloc,
       listener: (context, ForecastState state) {
        state.join(
           (_) => null,
@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           (failure) {
             final dialog = AlertDialog(
               title: Text("Error"),
-              content: Text(failure.message),
+              content: Text(failure.message!),
               actions: [
                 FlatButton(
                   onPressed: () => Navigator.pop(context),
@@ -214,12 +214,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
        );
       },
       child: BlocBuilder(
-      cubit: _forecastBloc,
-      builder: (context, ForecastState state) {
+        bloc: _forecastBloc,
+        builder: (context, ForecastState state) {
         return state.join(
             (initial) => Center(child: Text("")),
             (loading) => Center(child: CircularProgressIndicator()),
-            (success) => _buildData(success.current, success.forecast),
+            (success) => _buildData(success.current!, success.forecast!),
             (failure) => _buildError(failure),
         );
       },
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           height: 80,
                           width: 120,
                           child: CachedNetworkImage(
-                            imageUrl: StringUtils.getWeatherIconUrl(weather.iconNumber),
+                            imageUrl: StringUtils.getWeatherIconUrl(weather.iconNumber!),
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -264,12 +264,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              (weather.temperature as TemperatureModel).toStringWithUnit(_useCelsius ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
+                              (weather.temperature as TemperatureModel).toStringWithUnit(_useCelsius! ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
                               style: TextStyle(fontSize: 24),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              weather.conditions,
+                              weather.conditions!,
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
@@ -301,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         height: 70,
                         width: 110,
                         child: CachedNetworkImage(
-                          imageUrl: StringUtils.getWeatherIconUrl(weather.iconNumber),
+                          imageUrl: StringUtils.getWeatherIconUrl(weather.iconNumber!),
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -317,12 +317,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            (weather.temperature as TemperatureModel).toStringWithUnit(_useCelsius ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
+                            (weather.temperature as TemperatureModel).toStringWithUnit(_useCelsius! ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
                             style: TextStyle(fontSize: 26* 0.7),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            weather.conditions,
+                            weather.conditions!,
                             style: TextStyle(fontSize: 20* 0.7),
                           ),
                         ],
@@ -405,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       childAspectRatio: 0.9
                     ),
                     itemBuilder: (context, index) {
-                      WeatherRange dailyForecast = forecast.dailyForecasts[index];
+                      WeatherRange dailyForecast = forecast.dailyForecasts![index];
                       return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -414,14 +414,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(StringUtils.dayName(index) ?? '', style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text(StringUtils.dayName(index) ?? "", style: TextStyle(fontWeight: FontWeight.bold),),
                             const SizedBox(height: 4),
                             CachedNetworkImage(
-                              imageUrl: StringUtils.getWeatherIconUrl(dailyForecast.day.iconNumber),
+                              imageUrl: StringUtils.getWeatherIconUrl(dailyForecast.day.iconNumber!),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                                dailyForecast.temperatureRange.toStringWithUnit(_useCelsius ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
+                                dailyForecast.temperatureRange.toStringWithUnit(_useCelsius! ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
                                 style: TextStyle(fontSize: 17)),
                           ],
                         ),
@@ -452,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       childAspectRatio: 1.2
                     ),
                     itemBuilder: (context, index) {
-                      WeatherRange dailyForecast = forecast.dailyForecasts[index];
+                      WeatherRange dailyForecast = forecast.dailyForecasts![index];
                       return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -461,14 +461,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(StringUtils.dayName(index), style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text(StringUtils.dayName(index) ?? "", style: TextStyle(fontWeight: FontWeight.bold),),
                             const SizedBox(height: 4),
                             CachedNetworkImage(
-                              imageUrl: StringUtils.getWeatherIconUrl(dailyForecast.day.iconNumber),
+                              imageUrl: StringUtils.getWeatherIconUrl(dailyForecast.day.iconNumber!),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                                dailyForecast.temperatureRange.toStringWithUnit(_useCelsius ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
+                                dailyForecast.temperatureRange.toStringWithUnit(_useCelsius! ? TemperatureUnit.celsius : TemperatureUnit.fahrenheit),
                                 style: TextStyle(fontSize: 17)),
                           ],
                         ),
@@ -487,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void _onRefresh() async{
     await Future.delayed(Duration(milliseconds: 900));
     if(_currentCity!=null) {
-      _forecastBloc.add(FetchForecastEvent(_currentCity.key, byKey: true));
+      _forecastBloc.add(FetchForecastEvent(_currentCity!.key, byKey: true));
     }
     _refreshController.refreshCompleted();
   }

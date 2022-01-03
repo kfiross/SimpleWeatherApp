@@ -7,11 +7,11 @@ part 'weather_model.g.dart';
 @HiveType(typeId: 3)
 class WeatherModel extends Weather {
   WeatherModel({
-    String cityKey,
-    int epochTime,
-    TemperatureModel temperature,
-    String conditions,
-    int iconNumber,
+    String? cityKey,
+    int? epochTime,
+    TemperatureModel? temperature,
+    String? conditions,
+    int? iconNumber,
   })
       : super(
     cityKey: cityKey,
@@ -24,16 +24,16 @@ class WeatherModel extends Weather {
   factory WeatherModel.fromJson(Map<String, dynamic> json) =>
       WeatherModel(
         // city: city,
-        epochTime: json['EpochTime'] as int,
-        iconNumber: json['WeatherIcon'] as int,
-        conditions: json['WeatherText'] as String,
-        temperature: TemperatureModel(json['Temperature']['Metric']['Value'] as double),
+        epochTime: json['EpochTime'] as int?,
+        iconNumber: json['WeatherIcon'] as int?,
+        conditions: json['WeatherText'] as String?,
+        temperature: TemperatureModel(json['Temperature']['Metric']['Value'] as double?),
       );
 
   static WeatherModel fromWeather(Weather weather) {
     return WeatherModel(
       cityKey: weather.cityKey,
-      temperature: TemperatureModel.fromTemprature(weather.temperature),
+      temperature: TemperatureModel.fromTemprature(weather.temperature!),
       conditions: weather.conditions,
       iconNumber: weather.iconNumber,
     );
@@ -59,5 +59,5 @@ class WeatherRange {
         );
 
 
-  TemperatureRange get temperatureRange => TemperatureRange(night.temperature, day.temperature);
+  TemperatureRange get temperatureRange => TemperatureRange(night.temperature as TemperatureModel?, day.temperature as TemperatureModel?);
 }

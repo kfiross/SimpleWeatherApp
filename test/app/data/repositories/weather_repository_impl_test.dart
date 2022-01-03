@@ -17,10 +17,10 @@ class MockLocalDataSource extends Mock implements LocalDataSource {}
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
-  WeatherRepositoryImpl repository;
-  MockRemoteDataSource mockRemoteDataSource;
-  MockLocalDataSource mockLocalDataSource;
-  MockNetworkInfo mockNetworkInfo;
+  late WeatherRepositoryImpl repository;
+  MockRemoteDataSource? mockRemoteDataSource;
+  MockLocalDataSource? mockLocalDataSource;
+  MockNetworkInfo? mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
@@ -35,7 +35,7 @@ void main() {
   void runTestsOnline(Function body) {
     group('device is online', () {
       setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        when(mockNetworkInfo!.isConnected).thenAnswer((_) async => true);
       });
 
       body();
@@ -45,7 +45,7 @@ void main() {
   void runTestsOffline(Function body) {
     group('device is offline', () {
       setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+        when(mockNetworkInfo!.isConnected).thenAnswer((_) async => false);
       });
 
       body();
@@ -68,11 +68,11 @@ void main() {
       'should check if the device is online',
           () async {
         // arrange
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        when(mockNetworkInfo!.isConnected).thenAnswer((_) async => true);
         // act
         repository.getWeatherByKey(tKey);
         // assert
-        verify(mockNetworkInfo.isConnected);
+        verify(mockNetworkInfo!.isConnected);
       },
     );
 
@@ -81,14 +81,14 @@ void main() {
         'should return remote data when the call to remote data source is successful',
             () async {
           // arrange
-          when(mockRemoteDataSource.getWeatherByKey(any))
+          when(mockRemoteDataSource!.getWeatherByKey(any))
               .thenAnswer((_) async => tWeatherModel);
 
           // act
           final result = await repository.getWeatherByKey(tKey);
 
           // assert
-          verify(mockRemoteDataSource.getWeatherByKey(tKey));
+          verify(mockRemoteDataSource!.getWeatherByKey(tKey));
           expect(result, equals(Right(tWeather)));
         },
       );
@@ -97,15 +97,15 @@ void main() {
         'should cache the data locally when the call to remote data source is successful',
             () async {
               // arrange
-              when(mockRemoteDataSource.getWeatherByKey(any))
+              when(mockRemoteDataSource!.getWeatherByKey(any))
                   .thenAnswer((_) async => tWeatherModel);
 
               // act
               await repository.getWeatherByKey(tKey);
 
               // assert
-              verify(mockRemoteDataSource.getWeatherByKey(tKey));
-              verify(mockLocalDataSource.cacheWeather(tKey, tWeatherModel));
+              verify(mockRemoteDataSource!.getWeatherByKey(tKey));
+              verify(mockLocalDataSource!.cacheWeather(tKey, tWeatherModel));
         },
       );
 
@@ -113,14 +113,14 @@ void main() {
         'should return server failure when the call to remote data source is unsuccessful',
             () async {
               // arrange
-              when(mockRemoteDataSource.getWeatherByKey(any))
+              when(mockRemoteDataSource!.getWeatherByKey(any))
                   .thenThrow(ServerException());
 
               // act
               final result = await repository.getWeatherByKey(tKey);
 
               // assert
-              verify(mockRemoteDataSource.getWeatherByKey(tKey));
+              verify(mockRemoteDataSource!.getWeatherByKey(tKey));
               verifyZeroInteractions(mockLocalDataSource);
               expect(result, equals(Left(ServerFailure())));
         },
@@ -132,7 +132,7 @@ void main() {
         'should return last locally cached data when the cached data is present',
             () async {
           // arrange
-          when(mockLocalDataSource.getLastWeather(tKey))
+          when(mockLocalDataSource!.getLastWeather(tKey))
               .thenAnswer((_) async => tWeatherModel);
 
           // act
@@ -149,7 +149,7 @@ void main() {
         'should return CacheFailure when there is no cached data present',
             () async {
           // arrange
-          when(mockLocalDataSource.getLastWeather(tKey))
+          when(mockLocalDataSource!.getLastWeather(tKey))
               .thenThrow(CacheException());
           // act
           final result = await repository.getWeatherByKey(tKey);

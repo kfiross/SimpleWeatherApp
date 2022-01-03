@@ -5,11 +5,11 @@ part 'city_model.g.dart';
 
 @HiveType(typeId: 1)
 class CityModel extends City {
-  CityModel({String name, String key}) : super(key: key, name: name);
+  CityModel({String? name, String? key}) : super(key: key, name: name);
 
   factory CityModel.fromJson(Map<String, dynamic> json) => CityModel(
-        name: json['LocalizedName'] as String,
-        key: json['Key'] as String,
+        name: json['LocalizedName'] as String?,
+        key: json['Key'] as String?,
       );
 
   static CityModel fromCity(City city) => CityModel(

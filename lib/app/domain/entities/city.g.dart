@@ -18,7 +18,7 @@ class CityAdapter extends TypeAdapter<City> {
     };
     return City(
       name: fields[0] as dynamic,
-      key: fields[1] as String,
+      key: fields[1] as String?,
     );
   }
 

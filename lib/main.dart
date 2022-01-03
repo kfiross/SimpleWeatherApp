@@ -37,10 +37,26 @@ class _MyAppState extends State<MyApp> {
       child: Builder(
         builder: (context) {
           return MaterialApp(
+            builder: (context, child) {
+              return ThemeSwitchingArea(
+                child: Builder(
+                  builder: (context) {
+                    return child ?? const SizedBox.shrink();
+                  }
+                ),
+              );
+            },
             debugShowCheckedModeBanner: false,
             title: 'Weather App',
-            theme: ThemeProvider.of(context),
+            theme: initTheme, //?ThemeSwitcher.of(context),
             home: HomeScreen(),
+            // home: ThemeSwitchingArea(
+            //     child: Builder(
+            //       builder: (context) {
+            //         return HomeScreen();
+            //       }
+            //     )
+            // ),
           );
         },
       ),

@@ -13,7 +13,7 @@ class CitiesState extends Union4Impl<Initial, Loading, Success, Failure>{
   factory CitiesState.success(List<City> cities) =>
       CitiesState._(unions.third(Success(cities)));
 
-  factory CitiesState.failure(String message) =>
+  factory CitiesState.failure(String? message) =>
       CitiesState._(unions.fourth(Failure(message)));
 }
 
@@ -41,11 +41,11 @@ class Success extends _CitiesState {
 }
 
 class Failure extends _CitiesState {
-  final String message;
+  final String? message;
 
   Failure(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }
 

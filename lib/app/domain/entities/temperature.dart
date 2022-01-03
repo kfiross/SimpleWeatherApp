@@ -6,10 +6,10 @@ part 'temperature.g.dart';
 @HiveType(typeId: 4)
 class Temperature extends Equatable{
   @HiveField(0)
-  final double celsius;
+  final double? celsius;
 
   Temperature(this.celsius);
 
   @override
-  List<Object> get props => [celsius];
+  List<Object?> get props => [celsius];
 }

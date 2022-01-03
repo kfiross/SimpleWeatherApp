@@ -9,18 +9,18 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class FavouriteLocationsScreen extends StatefulWidget {
-  FavouriteLocationsScreen({Key key}) : super(key: key);
+  FavouriteLocationsScreen({Key? key}) : super(key: key);
 
   @override
   _FavouriteLocationsScreenState createState() => _FavouriteLocationsScreenState();
 }
 
 class _FavouriteLocationsScreenState extends State<FavouriteLocationsScreen> {
-  bool _useCelsius = false;
+  bool? _useCelsius = false;
   final prefsBox = Hive.box('prefs');
   final citiesBox = Hive.box('cities');
 
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
 
   var _updater = Updater();
 
@@ -54,7 +54,7 @@ class _FavouriteLocationsScreenState extends State<FavouriteLocationsScreen> {
               selectedBorderColor: Colors.white,
               focusColor: Colors.white60,
               fillColor: Colors.blue[700],
-              isSelected: [_useCelsius, !_useCelsius],
+              isSelected: [_useCelsius!, !_useCelsius!],
             children: [
               Text("℃", style: TextStyle(fontSize: 20)),
               Text("℉", style: TextStyle(fontSize: 20)),

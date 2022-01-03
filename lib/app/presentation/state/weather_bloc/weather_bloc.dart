@@ -22,7 +22,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     yield WeatherState.loading();
     if(event is FetchWeatherEvent){
       Either<BaseFailure, Map> failOrWeather;
-      if (event.byKey != null && event.byKey) {
+      if (event.byKey != null && event.byKey!) {
         failOrWeather = await _repository.getWeatherByKey(event.query);
       }
       else {

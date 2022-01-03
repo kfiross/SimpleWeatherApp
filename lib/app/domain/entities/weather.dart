@@ -10,29 +10,29 @@ part 'weather.g.dart';
 @HiveType(typeId: 2)
 class Weather extends Equatable {
   @HiveField(0)
-  final String cityKey;
+  final String? cityKey;
 
   @HiveField(1)
-  final int epochTime;
+  final int? epochTime;
 
   @HiveField(2)
-  final String conditions;
+  final String? conditions;
 
   @HiveField(3)
-  final int iconNumber;
+  final int? iconNumber;
 
   @HiveField(4)
-  final Temperature temperature;
+  final Temperature? temperature;
 
   Weather({
-    @required this.cityKey,
-    @required this.conditions,
-    @required this.iconNumber,
-    @required this.temperature,
-    @required this.epochTime,
+    required this.cityKey,
+    required this.conditions,
+    required this.iconNumber,
+    required this.temperature,
+    required this.epochTime,
   });
 
   @override
-  List<Object> get props => [cityKey, conditions, iconNumber, temperature];
+  List<Object?> get props => [cityKey, conditions, iconNumber, temperature];
 
 }

@@ -6,8 +6,8 @@ import 'package:mockito/mockito.dart';
 class MockConnectivity extends Mock implements Connectivity {}
 
 void main() {
-  NetworkInfoImpl networkInfo;
-  MockConnectivity mockConnectivity;
+  late NetworkInfoImpl networkInfo;
+  MockConnectivity? mockConnectivity;
 
   setUp(() {
     mockConnectivity = MockConnectivity();
@@ -21,12 +21,12 @@ void main() {
         // arrange
         final tHasConnectionFuture = true;
 
-        when((await mockConnectivity.checkConnectivity()) != ConnectivityResult.none)
+        when((await mockConnectivity!.checkConnectivity()) != ConnectivityResult.none)
             .thenAnswer((_) => tHasConnectionFuture);
         // act
         final result = networkInfo.isConnected;
         // assert
-        verify((await mockConnectivity.checkConnectivity()) != ConnectivityResult.none);
+        verify((await mockConnectivity!.checkConnectivity()) != ConnectivityResult.none);
         expect(result, tHasConnectionFuture);
       },
     );

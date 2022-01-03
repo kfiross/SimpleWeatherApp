@@ -1,7 +1,7 @@
 class StringUtils{
   const StringUtils._();
 
-  static String dayName(int daysFromToday) {
+  static String? dayName(int daysFromToday) {
     if(daysFromToday == 0)
       return "Today";
     if(daysFromToday == 1)
@@ -10,7 +10,7 @@ class StringUtils{
   }
 
   // ignore: missing_return
-  static String weekDayToString(int weekday){
+  static String? weekDayToString(int weekday){
     switch(weekday){
       case 7:
         return "Sunday";
@@ -27,6 +27,7 @@ class StringUtils{
       case 6:
         return "Saturday";
     }
+    return null;
   }
 
   static String getWeatherIconUrl(int iconNumber){

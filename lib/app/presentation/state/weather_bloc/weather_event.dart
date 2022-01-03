@@ -5,13 +5,13 @@ abstract class WeatherEvent extends Equatable {
 }
 
 class FetchWeatherEvent extends WeatherEvent{
-  final String query;
-  final bool byKey;
+  final String? query;
+  final bool? byKey;
 
   FetchWeatherEvent(this.query, {this.byKey});
 
   @override
-  List<Object> get props => [query, byKey];
+  List<Object?> get props => [query, byKey];
 
 }
 

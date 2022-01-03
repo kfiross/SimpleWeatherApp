@@ -2,7 +2,7 @@ import 'package:WeatherApp/app/data/models/weather_model.dart';
 import 'package:WeatherApp/app/domain/entities/forecast.dart';
 
 class ForecastModel extends Forecast{
-  ForecastModel({List<WeatherRange> dailyForecasts, String conditions})
+  ForecastModel({List<WeatherRange>? dailyForecasts, String? conditions})
       : super(dailyForecasts: dailyForecasts, conditions: conditions);
 
   static ForecastModel fromForecast(Forecast forecast) =>
@@ -16,7 +16,7 @@ class ForecastModel extends Forecast{
 
     var daysData = json['DailyForecasts'];
     for(Map dayJson in daysData){
-      dailyForecasts.add(WeatherRange.fromJson(dayJson));
+      dailyForecasts.add(WeatherRange.fromJson(dayJson as Map<String, dynamic>));
     }
 
     return ForecastModel(

@@ -9,10 +9,10 @@ class WeatherState extends Union4Impl<Initial, Loading, Success, Failure> {
 
   factory WeatherState.loading() => WeatherState._(unions.second(Loading()));
 
-  factory WeatherState.success(Weather weather, {bool isCached}) =>
+  factory WeatherState.success(Weather? weather, {bool? isCached}) =>
       WeatherState._(unions.third(Success(weather, isCached: isCached)));
 
-  factory WeatherState.failure(String message) =>
+  factory WeatherState.failure(String? message) =>
       WeatherState._(unions.fourth(Failure(message)));
 }
 
@@ -31,20 +31,20 @@ class Loading extends _WeatherState {
 }
 
 class Success extends _WeatherState {
-  final Weather weather;
-  final bool isCached;
+  final Weather? weather;
+  final bool? isCached;
 
   Success(this.weather, {this.isCached});
 
   @override
-  List<Object> get props => [weather];
+  List<Object?> get props => [weather];
 }
 
 class Failure extends _WeatherState {
-  final String message;
+  final String? message;
 
   Failure(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

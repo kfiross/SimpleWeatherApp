@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class DrawerItem {
-  String title;
-  IconData icon;
+  String? title;
+  IconData? icon;
 
-  DrawerItem({@required String title, IconData icon});
+  DrawerItem({required String title, IconData? icon});
 }
 
 class MyDrawerNavigation extends StatefulWidget {
@@ -22,8 +22,11 @@ class MyDrawerNavigation extends StatefulWidget {
 class _MyDrawerNavigationState extends State<MyDrawerNavigation> {
   final prefsBox = Hive.box('prefs');
 
+  bool? _isDarkMode;
   @override
   Widget build(BuildContext context) {
+    _isDarkMode ??= Theme.of(context).brightness ==  Brightness.dark;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -53,27 +56,35 @@ class _MyDrawerNavigationState extends State<MyDrawerNavigation> {
             child: Text("OPTIONS", style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           ThemeSwitcher(
-            builder: (context) {
+            builder: (ctx) {
               return SwitchListTile(
                 title: Text("Dark Theme"),
                 onChanged: (val){
-                  setState(() {
-                    prefsBox.put('use_dark_theme', val);
-
-                    ThemeSwitcher.of(context).changeTheme(
-                      theme: ThemeProvider.of(context).brightness ==  Brightness.light
-                          ? AppThemes.dark(context)
-                          : AppThemes.light(context),
-                    );
-                  });
-
+                  _changeTheme(val, ctx);
+                  // _changeTheme(val);
                 },
-                value: ThemeProvider.of(context).brightness ==  Brightness.dark,
+                value: _isDarkMode ?? false,
                 );}
             ),
         ],
       ),
     );
+  }
+
+  void _changeTheme(val, ctx){
+    print("val=$val");
+
+    final newTheme = val == true ? AppThemes.dark(context) : AppThemes.light(context);
+
+    ThemeSwitcher.of(ctx).changeTheme(
+      theme: newTheme,
+    );
+
+    prefsBox.put('use_dark_theme', val);
+
+    setState(() {
+      _isDarkMode = val;
+    });
   }
 
   Widget _drawerHeader() {

@@ -4,10 +4,10 @@ import 'package:hive/hive.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class SearchBar extends StatefulWidget {
-  final Function(String) onAdd;
-  final Widget child;
+  final Function(String)? onAdd;
+  final Widget? child;
 
-  const SearchBar({Key key, this.onAdd, this.child}) : super(key: key);
+  const SearchBar({Key? key, this.onAdd, this.child}) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -16,10 +16,10 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   final historyQueriesBox = Hive.box('history_queries');
 
-  FloatingSearchBarController _searchBarController;
+  FloatingSearchBarController? _searchBarController;
 
   List<String> _searchHistory = [];
-  List<String> filteredSearchHistory;
+  late List<String> filteredSearchHistory;
   String selectedTerm = "";
 
   @override
@@ -35,7 +35,7 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   void dispose() {
-    _searchBarController.dispose();
+    _searchBarController!.dispose();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class _SearchBarState extends State<SearchBar> {
             selectedTerm = query;
           });
 
-          _searchBarController.close();
+          _searchBarController!.close();
 
           widget.onAdd?.call(selectedTerm);
         },
@@ -79,7 +79,7 @@ class _SearchBarState extends State<SearchBar> {
               elevation: 4,
               child: Builder(builder: (context) {
                 if (filteredSearchHistory.isEmpty &&
-                    _searchBarController.query.isEmpty) {
+                    _searchBarController!.query.isEmpty) {
                   return Container(
                     height: 56,
                     width: double.infinity,
@@ -93,14 +93,14 @@ class _SearchBarState extends State<SearchBar> {
                   );
                 } else if (filteredSearchHistory.isEmpty) {
                   return ListTile(
-                    title: Text(_searchBarController.query),
+                    title: Text(_searchBarController!.query),
                     leading: const Icon(Icons.search),
                     onTap: () {
                       setState(() {
-                        addSearchTerm(_searchBarController.query);
-                        selectedTerm = _searchBarController.query;
+                        addSearchTerm(_searchBarController!.query);
+                        selectedTerm = _searchBarController!.query;
                       });
-                      _searchBarController.close();
+                      _searchBarController!.close();
 
                       widget.onAdd?.call(selectedTerm);
                     },
@@ -131,7 +131,7 @@ class _SearchBarState extends State<SearchBar> {
                               selectedTerm = term;
                             });
 
-                            _searchBarController.close();
+                            _searchBarController!.close();
 
                             widget.onAdd?.call(selectedTerm);
 
@@ -147,7 +147,7 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   List<String> filterSearchTerms({
-    @required String filter,
+    required String? filter,
   }) {
     if (filter != null && filter.isNotEmpty) {
       // Reversed because we want the last added items to appear first in the UI
